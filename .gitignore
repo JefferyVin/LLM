@@ -1,0 +1,7 @@
+.vscode
+.venv
+
+*.bin
+
+cuda/play
+cuda/play_cuda
