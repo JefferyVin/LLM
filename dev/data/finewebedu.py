@@ -1,18 +1,7 @@
 """
-Fineweb dataset for serious pretraining
-
-example doc to highlight the structure of the dataset
-{
-  "text": "Posted by mattsmith on 20th April 2012\nStraight from...",
-  "id": "<urn:uuid:d853d453-196e-4488-a411-efc2b26c40d2>",
-  "dump": "CC-MAIN-2013-20",
-  "url": "http://aaaaa.com/aa/aaaa/aaaa/",
-  "date": "2013-05-18T07:24:47Z",
-  "file_path": "s3://commoncrawl/long.../path.../file.gz    ",
-  "language": "en",
-  "language_score": 0.9185474514961243,
-  "token_count": 594
-}
+Fineweb-edu dataset for serious pretraining.
+Karpathy doesnt have very good results with this dataset. But it might be a setting issue.
+https://huggingface.co/datasets/HuggingFaceFW/fineweb-edu
 """
 
 import os

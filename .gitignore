@@ -3,5 +3,10 @@
 
 *.bin
 
-cuda/play
-cuda/play_cuda
+dev/cuda/addition
+dev/cuda/MultiBlocks
+dev/cuda/SingleBlock
+
+input.txt
+
+a.out

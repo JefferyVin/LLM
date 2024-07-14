@@ -1,9 +1,15 @@
+# My copy of train_gpt2.py following the instruction of karpathy's video https://www.youtube.com/watch?v=l8pRSuU81PU&t=1s&pp=ygUIa2FycGF0aHk%3D up until the implementation of DDP
+
 from dataclasses import dataclass
 import torch
 import torch.nn as nn
 from torch.nn import functional as F
 import math
 import inspect
+
+import os
+
+#os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "expandable_segments:True"
 
 class CausalSelfAttention(nn.Module):
 
@@ -211,6 +217,14 @@ class DataloaderLite:
         self.B = B
         self.T = T
 
+        # if input.txt doesnt exist download it
+        if not os.path.exists('input.txt'):
+            import requests
+            url = "https://raw.githubusercontent.com/karpathy/char-rnn/master/data/tinyshakespeare/input.txt"
+            data = requests.get(url)
+            with open('input.txt', 'w') as f:
+                f.write(data.text)
+
         with open('input.txt', 'r') as f:
             text = f.read()
         enc = tiktoken.get_encoding('gpt2')
@@ -244,8 +258,8 @@ if torch.cuda.is_available():
     torch.cuda.manual_seed_all(1337)
 
 total_batch_size = 524288
-B = 2
-T = 1024
+B = 4
+T = 64
 assert total_batch_size % (B * T) == 0, "make sure total_batch_size is divisible by B * T"
 grad_accu_steps = total_batch_size // (B * T)
 print(f"gradient accumulation steps: {grad_accu_steps} | total batch size: {total_batch_size}")
@@ -253,14 +267,14 @@ print(f"gradient accumulation steps: {grad_accu_steps} | total batch size: {tota
 num_return_sequences = 5
 max_length = 30
 
-train_loader = DataloaderLite(2, 1024)
+train_loader = DataloaderLite(B, T)
 
 #torch.set_float32_matmul_precision('medium')
 
 model = GPT(GPTConfig())
 model.eval()
 model.to(device)
-model = torch.compile(model)
+#model = torch.compile(model)
 
 max_lr = 6e-4
 min_lr = max_lr * 0.1
